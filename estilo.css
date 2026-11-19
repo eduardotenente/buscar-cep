@@ -24,7 +24,7 @@ header {
 
 main {
     margin: 20%  auto;
-    height: 100px;
+    height: 150px;
     width: 350px;
     display: flex;
     flex-flow: column nowrap;
@@ -39,6 +39,8 @@ section {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    margin-top: 5%;
 }
 
 #cep {

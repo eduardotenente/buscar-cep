@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultar CEP !</title>
     <link rel="stylesheet" href="estilo.css">
-    <script src="buscarCEP.js" defer></script>
+    <script src="buscar.js" defer></script>
 </head>
 <body>
     <header>
@@ -15,7 +15,7 @@
     <main>
         <form id="formularioCEP">
             <label for="cep">CEP: 
-                <input type="text" name="cep" id="cep">
+                <input type="text" name="cep" id="cep" autocomplete="on" maxlength="9" placeholder="digite seu CEP" required>
             </label>
             <input type="submit" value="Pesquisar">
         </form>
