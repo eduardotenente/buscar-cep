@@ -1,6 +1,5 @@
 const formularioCEP = document.querySelector('#formularioCEP');
-const cepInput = document.querySelector('#cep');
-const cep = cepInput.value;
+const inputCep = document.querySelector('#cep');
 
 const estado = document.querySelector('#estado');
 const cidade = document.querySelector('#cidade');
@@ -8,48 +7,41 @@ const bairro = document.querySelector('#bairro');
 const endereco = document.querySelector('#endereço');
 const situacao = document.querySelector('#situação');
 
-formularioCEP.addEventListener('submit', (evento) => {
+formularioCEP.addEventListener('submit', async (evento) => {
     evento.preventDefault();
-    buscarCEP(cep);
-});
 
-async function buscarCEP(cepInformado) {
+    const cep = inputCep.value.replace(/\D/g, '');
+    if(cep.length !== 8) {
+        alert('Digite um CEP válido!');
+        return;
+    };
+
     try {
-        const busca = await fetch(`https://viacep.com.br/ws/${cepInformado}/json/`);
+        const busca = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+
         if(!busca.ok) {
             throw new Error('[O servidor se encontra indisponível no momento]: ', busca.status);
         }
 
-        const local = await busca.json();
-        const informacoes = {
-            estadoCEP: '',
-            cidadeCEP: '',
-            bairroCEP: '',
-            enderecoCEP: '' 
+        const dados = await busca.json();
+    
+        if(dados.erro) {
+            alert('CEP não encontrado')
+            limparFormulario();
+            return;
         };
 
-        const pegarInformacoes = local.forEach(local => {
-            if(local.state) {
-                informacoes.estadoCEP = local.state;
-            }
+        estado.textContent = `Estado: ${dados.uf}`;
+        cidade.textContent = `Cidade: ${dados.localidade}`;
+        bairro.textContent = `Bairro: ${dados.bairro}`;
+        endereco.textContent = `Rua: ${dados.logradouro}`;
 
-            if(local.city) {
-                informacoes.cidadeCEP = local.city;
-            }
-
-            if(local.neighborhood) {
-                informacoes.bairroCEP = local.neighborhood;
-            }
-
-            if(local.address) {
-                informacoes.enderecoCEP = local.address;
-            }
-        });
-        console.log(informacoes);
-
+        situacao.classList.add('mensagem');
         situacao.textContent = 'A busca pelo CEP foi um sucesso!';
 
-    } catch (error) {
-        situacao.textContent = 'Não foi possível realizar a busca pelo CEP informado.', error.message;
-    }
-}
+        } catch (error) {
+            situacao.textContent = 'Não foi possível realizar a busca pelo CEP informado.', error.message;
+        }
+});
+
+situacao.classList.remove('mensagem')
